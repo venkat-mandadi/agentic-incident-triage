@@ -1,0 +1,15 @@
+{
+  "event": {
+    "id": "01EXAMPLE",
+    "event_type": "incident.triggered",
+    "data": {
+      "id": "PD-INC-4823",
+      "type": "incident",
+      "title": "High 5xx error rate on payments-api",
+      "urgency": "high",
+      "created_at": "2026-07-25T14:32:10Z",
+      "service": { "summary": "payments-api" },
+      "body": { "details": "5xx error ratio exceeded 5% for 3 minutes; checkout failing" }
+    }
+  }
+}

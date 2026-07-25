@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentic-incident-triage"
+version = "0.1.0"
+description = "A Slack/PagerDuty RCA agent that correlates alerts to root causes and cuts MTTR."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Venkat Mandadi" }]
+keywords = ["sre", "incident", "pagerduty", "slack", "rca", "mttr", "mcp", "observability"]
+dependencies = []
+
+[project.optional-dependencies]
+mcp = ["mcp>=1.2.0"]
+dev = ["pytest>=8.0", "ruff==0.15.11"]
+
+[project.scripts]
+triage = "incident_triage.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

@@ -1,0 +1,24 @@
+{
+  "service": "payments-api",
+  "error_rate": { "current": 0.08, "baseline": 0.002 },
+  "latency_p99_ms": { "current": 950, "baseline": 240 },
+  "cpu_util": 0.62,
+  "mem_util": 0.55,
+  "restarts": 0,
+  "oom_killed": 0,
+  "deploys": [
+    { "service": "payments-api", "version": "v2.3.1", "minutes_ago": 6 }
+  ],
+  "config_changes": [],
+  "dependencies": [
+    { "name": "auth-service", "healthy": true, "error_rate": 0.004 }
+  ],
+  "node_pressure": false,
+  "network_errors": false,
+  "slo": {
+    "name": "payments-api-availability",
+    "target": 0.999,
+    "error_budget_remaining_pct": 42,
+    "burn_rate": 14
+  }
+}

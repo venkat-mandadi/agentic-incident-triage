@@ -13,6 +13,9 @@ blank dashboard.
   <img alt="License" src="https://img.shields.io/badge/license-MIT-green">
 </p>
 
+![demo](assets/agentic-incident-triage-demo.gif)
+
+
 > This is the open version of an incident-triage agent I built in production,
 > where it cut **MTTR from ~20 minutes to ~3** and slowed error-budget burn
 > during SLO events. The internal integrations are stripped out; the correlation

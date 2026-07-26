@@ -13,17 +13,17 @@ blank dashboard.
   <img alt="License" src="https://img.shields.io/badge/license-MIT-green">
 </p>
 
-> A generalized, open version of a system I built in production, where an
-> AI incident-triage agent cut **MTTR from ~20 minutes to ~3** and protected
-> SLOs by slowing error-budget burn. The proprietary bits are stripped; the
-> correlation approach — and the guardrails that keep it safe — are here in full.
+> This is the open version of an incident-triage agent I built in production,
+> where it cut **MTTR from ~20 minutes to ~3** and slowed error-budget burn
+> during SLO events. The internal integrations are stripped out; the correlation
+> logic and the guardrails around it are all here, and runnable.
 
-**Two layers, on purpose.** A thin Claude **skill** ([`SKILL.md`](SKILL.md))
-orchestrates — ingest the alert, run the correlation engine, post to Slack,
-route to a human for anything destructive. A Python **engine**
-(`src/incident_triage/`) does the correlation and scoring. The agent spends its
-tokens on *judgment and communication*, not on grinding through raw telemetry —
-faster, cheaper, and deterministic.
+**The split that matters: skill vs. engine.** A thin Claude **skill**
+([`SKILL.md`](SKILL.md)) orchestrates — ingest the alert, run the correlation
+engine, post to Slack, hand anything destructive to a human. The correlation and
+scoring live in a Python **engine** (`src/incident_triage/`). So the model spends
+its time on *what to say and what to recommend*, not on grinding through raw
+telemetry. Faster, cheaper, and the scoring comes out the same every time.
 
 ---
 
@@ -100,7 +100,7 @@ python -m incident_triage.mcp_server examples/sample_alert.json examples/sample_
 
 Tools: `triage_alert()`, `top_root_cause()`, `slack_message()`.
 
-## How the RCA scores (the interesting part)
+## How the RCA scoring works
 
 Confidence is built the way a good responder reasons:
 

@@ -14,12 +14,42 @@ description: >-
 
 # agentic-incident-triage — RCA from a PagerDuty alert
 
+**Your role.** Act as an experienced on-call SRE running triage: calm under a
+page, biased toward the fastest *safe* next action, and disciplined about handing
+anything destructive to a human. The engine does the correlation; you decide what
+it means and what to tell the responder.
+
 The slow part of on-call is correlation, not typing. Your job with this skill is
 to get the responder to a likely cause and a safe next action fast — and to
 route anything destructive to a human. **Do not pull raw metrics, logs, or
 dashboards into context and reason over them line by line.** That's slow,
 token-heavy, and non-reproducible. Delegate correlation to the engine and work
 from its ranked, evidence-carrying output.
+
+## What you need to run this
+
+**The engine (required).** Python 3.10+ and the bundled `incident_triage`
+package. It runs offline against a saved alert + signals snapshot — no live
+connections needed for the sample. The rest is for real incidents.
+
+**MCP servers (for live use).** Connect the tool servers that feed the
+correlation and carry the result:
+
+- **A PagerDuty / alerting MCP** — to pull the triggering alert. Opsgenie,
+  Grafana OnCall, or a raw webhook payload work the same; the engine reads the
+  alert shape in `examples/sample_alert.json`.
+- **A Prometheus / observability MCP** — to gather the correlation signals:
+  recent deploys, error and latency spikes, saturation, restarts/OOM, dependency
+  health, config changes. Datadog, Dynatrace, New Relic, Chronosphere — any of
+  them; the engine consumes the signal schema in `examples/sample_signals.json`.
+- **A Slack / chat MCP** — to post the ranked RCA into the incident channel.
+  Teams, Discord, and Mattermost are drop-in.
+- **A Kubernetes / Argo Rollouts MCP** — optional, and only to *suggest* the
+  rollback command (e.g. `kubectl argo rollouts undo`). A human runs it; the
+  skill never executes a destructive action.
+
+The engine doesn't care which vendors these are — it works from the two example
+schemas. Swap any server for the equivalent you already run.
 
 ## When to use this
 

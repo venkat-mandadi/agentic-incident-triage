@@ -1,0 +1,10 @@
+{
+  "database": "../triage.db",
+  "mode": "deterministic",
+  "principals": [
+    {"token_env": "TRIAGE_API_TOKEN", "tenant": "demo", "services": ["payments-api"], "environments": ["demo"]}
+  ],
+  "bindings": [
+    {"tenant": "demo", "service": "payments-api", "environment": "demo", "snapshot_path": "sample_signals.json"}
+  ]
+}

@@ -1,5 +1,40 @@
 # Architecture
 
+## Automation runtime
+
+The new `incident_triage.automation` package surrounds the existing pure engine
+with authenticated intake, a durable queue, bounded planning, and evidence storage.
+See [automation setup and limitations](automation.md).
+
+```mermaid
+flowchart LR
+    Intake[Authenticated API / signed PagerDuty event] --> DB[(SQLite runs and events)]
+    DB --> Worker[Worker with fenced lease]
+    Worker --> Planner[Claude planner or deterministic collector]
+    Planner --> Gateway[Allowlisted read-only tools]
+    Gateway --> Snapshot[Existing correlation engine]
+    Gateway --> Metrics[Prometheus]
+    Gateway --> Logs[Loki]
+    Gateway --> Evidence[(Persisted scoped evidence)]
+    Evidence --> Planner
+    Planner --> Validation[Schema and citation validation]
+    Validation --> Report[(Immutable report)]
+    Report --> API[Authenticated report API]
+```
+
+The model sees bounded, redacted evidence and proposes one next step. Application
+code owns scope, budgets, persistence, and final status. Model interpretation can
+still be incorrect; citation membership checks do not prove semantic support.
+The snapshot engine supplies hypotheses, not established root causes.
+
+SQLite itself is the durable job queue, so there is no database-to-broker dual
+write. Intake inserts a run and its first progress event in one transaction.
+Workers renew short leases and persist evidence after each tool call. Lease tokens
+fence stale workers after cancellation or recovery. Model calls are reserved
+before execution, so retries consume the same persistent per-run budgets.
+
+## Original snapshot / MCP path
+
 Layered so the **correlation logic** is pure and testable and the **agent
 surface** (skill / MCP) is a thin adapter. An LLM never sees raw telemetry — it
 calls typed tools that return a ranked, evidence-carrying RCA.

@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0",
+  "service": "payments-api",
+  "environment": "demo",
+  "question": "Why did the error rate increase? Compare evidence and competing causes.",
+  "window": {"start": "2026-07-25T14:17:10Z", "end": "2026-07-25T14:32:10Z"}
+}

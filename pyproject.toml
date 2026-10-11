@@ -14,11 +14,13 @@ keywords = ["sre", "incident", "pagerduty", "slack", "rca", "mttr", "mcp", "obse
 dependencies = []
 
 [project.optional-dependencies]
+automation = ["fastapi>=0.115,<1", "httpx>=0.27,<1", "uvicorn>=0.30,<1", "pydantic>=2.9,<3"]
 mcp = ["mcp>=1.2.0"]
-dev = ["pytest>=8.0", "ruff==0.15.11"]
+dev = ["pytest>=8.0", "ruff==0.15.11", "agentic-incident-triage[automation]"]
 
 [project.scripts]
 triage = "incident_triage.cli:main"
+triage-agent = "incident_triage.automation.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

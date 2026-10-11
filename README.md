@@ -1,5 +1,38 @@
 # agentic-incident-triage
 
+## Incident-triage automation
+
+The repository now includes a runnable, read-only investigation service alongside
+the original snapshot correlation engine:
+
+- Authenticated API and HMAC-verified PagerDuty V3 intake.
+- Durable SQLite jobs, concurrent deduplication, restart recovery, fenced worker
+  leases, cancellation, and persistent progress events.
+- An optional Claude planner that chooses scoped evidence tools and produces a
+  structured report. A deterministic mode runs without model credentials.
+- Operator-configured Prometheus and Loki queries, plus the existing snapshot
+  correlation engine. Models cannot supply URLs, credentials, or arbitrary queries.
+- Evidence IDs, query provenance, qualitative hypotheses, missing evidence, and
+  explicit partial results. Reports never resolve incidents or execute commands.
+
+```bash
+python -m pip install -e ".[automation,dev]"
+triage-agent demo
+```
+
+The demo uses synthetic evidence and deliberately returns `partial`: its snapshot
+is not live telemetry. For authenticated intake, a separate worker, live
+connectors, model setup, and deployment boundaries, see
+**[the automation guide](docs/automation.md)**.
+
+This is a single-host implementation of the build guide's first investigation
+path, not its entire 70-capability platform. Hosted inference and live vendor
+connections require your configuration and evaluation. The legacy engine below
+remains available; its numerical confidence and MTTR estimates are heuristics,
+not calibrated probabilities or measurements from the new automation service.
+
+## Original snapshot engine
+
 **A Slack/PagerDuty RCA agent that cuts MTTR.** It consumes a PagerDuty alert,
 correlates it against a live observability snapshot — recent deploys, error and
 latency spikes, saturation, restarts/OOM, dependency health, config changes —
